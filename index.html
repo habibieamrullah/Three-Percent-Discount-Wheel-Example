@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+	
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Discount Wheel</title>
+		<script src="jquery.js"></script>
+		<script src="phaser.js"></script>
+		
+		<style>
+			body{
+				text-align: center;
+			}
+		</style>
+		
+		
+	</head>
+	<body>
+	
+		<div id="dwheel" style="display: inline-block; padding: 10px; margin: 0 auto;"></div>
+		
+		<script>
+			var game = new Phaser.Game(512, 512, Phaser.AUTO, "dwheel")
+			var dwheel = {}
+			
+			var wheelstarted = false
+			
+			
+			dwheel.Main = {
+				preload : function(){		
+					game.load.image("wheel", "Wheel.png")
+					game.load.image("needle", "Needle.png")
+				},
+				create : function(){
+					game.stage.backgroundColor = "#ffffff"
+					
+					wheel = game.add.sprite(game.width/2, game.height/2, "wheel")
+					wheel.anchor.setTo(.5)
+					wheel.scale.setTo(.5)
+					wheel.inputEnabled = true;
+					wheel.events.onInputDown.add(rotateTheWheel);
+					
+					needle = game.add.sprite(game.width/2 + 170, game.height/2, "needle")
+					needle.anchor.setTo(.5)
+					needle.scale.setTo(.5)
+					
+					function rotateTheWheel(){
+						if(!wheelstarted){
+							wheelstarted = true;
+							game.add.tween(wheel).to( {angle : 685 }, 5000, "Cubic", true ).onComplete.add(function(){
+								alert("Congratulation, bro! You won 3% Discount...")
+								location.reload()
+							})
+						}
+					}
+					
+				},
+			}
+			
+			game.state.add("Main", dwheel.Main)
+			game.state.start("Main")
+			
+			function wheelStopped(){
+				alert("Yes!")
+			}
+
+		</script>
+		
+	</body>
+
+</html>
