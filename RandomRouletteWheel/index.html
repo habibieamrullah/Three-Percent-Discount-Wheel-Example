@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+	
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Discount Wheel</title>
+		<script src="jquery.js"></script>
+		<script src="phaser.js"></script>
+		
+		<style>
+			body{
+				text-align: center;
+			}
+		</style>
+		
+		
+	</head>
+	<body>
+	
+		<div id="dwheel" style="display: inline-block; padding: 10px; margin: 0 auto; width: 100%; max-width: 512px;"></div>
+		
+		<script>
+			var game = new Phaser.Game(512, 768, Phaser.AUTO, "dwheel")
+			var dwheel = {}
+			
+			var wheelstarted = false
+			
+			var randomstops = [
+				{ rot : 685, value : 3 },
+				{ rot : 725, value : 2 },
+				{ rot : 1550, value : 10 },
+				{ rot : 1580, value : 5 },
+				{ rot : 1610, value : 3 },
+			]
+			
+			
+			dwheel.Main = {
+				preload : function(){		
+					game.load.image("wheel", "Wheel.png")
+					game.load.image("needle", "Needle.png")
+					game.load.image("base", "Base.png")
+					game.stage.backgroundColor = "#ffffff"
+				},
+				create : function(){
+					
+					base = game.add.sprite(game.width/2, game.height/2, "base")
+					base.anchor.setTo(.5)
+					base.scale.setTo(1.35)
+					
+					wheel = game.add.sprite(game.width/2, game.height/2-20, "wheel")
+					wheel.anchor.setTo(.5)
+					wheel.scale.setTo(.5)
+					wheel.inputEnabled = true;
+					wheel.events.onInputDown.add(rotateTheWheel);
+					
+					needle = game.add.sprite(game.width/2, game.height/2-185, "needle")
+					needle.anchor.setTo(.5)
+					needle.scale.setTo(.5)
+					
+					function rotateTheWheel(){
+						if(!wheelstarted){
+							wheelstarted = true
+							var randomnumber = game.rnd.integerInRange(0, randomstops.length-1)
+							game.add.tween(wheel).to( {angle : randomstops[randomnumber].rot }, 5000, "Cubic", true ).onComplete.add(function(){
+								alert("Congratulation, you won $"+ randomstops[randomnumber].value +"!")
+								console.log("Congratulation, you won $"+ randomstops[randomnumber].value +"!")
+								wheelstarted = false;
+							})
+						}
+					}
+					
+				},
+			}
+			
+			game.state.add("Main", dwheel.Main)
+			game.state.start("Main")
+
+		</script>
+		
+	</body>
+
+</html>
